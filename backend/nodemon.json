@@ -1,0 +1,13 @@
+{
+    "watch": ["src/**/*.ts"],
+    "ext": "ts",
+    "exec": "npx ts-node -r tsconfig-paths/register ./src/index.ts",
+    "ignore": ["node_modules/**/*", "dist/**/*"],
+    "delay": 1000,
+    "delayTimeout": 1000,
+    "ignoreWatch": ["node_modules/**/*", "dist/**/*"],
+    "watchOptions": {
+        "usePolling": true,
+        "useFsEvents": false
+    }
+}
