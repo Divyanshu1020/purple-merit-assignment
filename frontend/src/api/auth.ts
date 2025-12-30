@@ -1,3 +1,4 @@
+import { getAccessToken } from "@/store/authStore";
 import environment from "../config";
 
 // Types
@@ -70,14 +71,52 @@ export const register = async (
 
 // Refresh Token API
 export const refreshToken = async () => {
-  const res = await fetch(`${environment.API_URL}/auth/refresh`, {
+  const res = await fetch(`${environment.API_URL}/auth/refresh-token`, {
     method: "POST",
     credentials: "include",
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.message || "Unauthenticated") as any;
+    error.status = res.status;
+    throw error;
+  }
+
+  return res.json(); // { accessToken }
+};
+
+// Refresh Token API
+export const getProfile = async () => {
+  const token = getAccessToken();
+
+  if (!token) {
+    throw new Error("No access token available");
+  }
+
+  const res = await fetch(`${environment.API_URL}/user/profile`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!res.ok) {
     throw new Error("Unauthenticated");
   }
 
-  return res.json(); // { accessToken }
+  return res.json();
+};
+// Logout API
+export const logout = async (): Promise<void> => {
+  const res = await fetch(`${environment.API_URL}/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Logout failed");
+  }
 };

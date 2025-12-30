@@ -12,7 +12,7 @@ export const setAccessToken = (token: string) => {
   accessToken = token;
 };
 
-export const isLoggedIn = () => !accessToken;
+export const isLoggedIn = () => !!accessToken;
 
 export const getAccessToken = () => accessToken;
 

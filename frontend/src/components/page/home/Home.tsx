@@ -1,8 +1,8 @@
 import EntityContainer from "@/components/wrapper/EntityContainer";
-import environment from "@/config";
-import { isLoggedIn } from "@/store/authStore";
+import { getAccessToken, isAdmin, isLoggedIn } from "@/store/authStore";
 
 export default function Home() {
+  const userIsLoggedIn = isLoggedIn();
   return (
     <EntityContainer>
       <div className="container mx-auto px-4 py-16">
@@ -12,8 +12,11 @@ export default function Home() {
           </h1>
           <p className="text-xl text-gray-600 mb-8">
             This is where I show my full stack capability.
+            {/* Token : {accessToken} */}
+            isLoggedIn : {userIsLoggedIn.toString()}
+            role : {isAdmin().toString()}
           </p>
-          {!isLoggedIn() && (
+          {!userIsLoggedIn && (
             <div className="flex gap-4 justify-center">
               <a
                 href="/login"

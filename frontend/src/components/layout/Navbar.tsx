@@ -1,13 +1,13 @@
-import { clearAccessToken, getAccessToken } from "@/store/authStore";
-import { Link, useNavigate } from "react-router-dom";
+import { useLogout } from "@/query";
+import { getAccessToken, isAdmin, isLoggedIn } from "@/store/authStore";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const navigate = useNavigate();
   const isAuthenticated = !!getAccessToken();
+  const logoutMutation = useLogout();
 
   const handleLogout = () => {
-    clearAccessToken();
-    navigate("/login");
+    logoutMutation.mutate();
   };
 
   return (
@@ -24,7 +24,7 @@ export default function Navbar() {
 
           {/* Navigation Links */}
           <div className="flex items-center gap-6">
-            {isAuthenticated ? (
+            {isAuthenticated && isAdmin() && (
               <>
                 <Link
                   to="/profile"
@@ -40,12 +40,33 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                  disabled={logoutMutation.isPending}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Logout
+                  {logoutMutation.isPending ? "Logging out..." : "Logout"}
                 </button>
               </>
-            ) : (
+            )}
+
+            {isAuthenticated && !isAdmin() && (
+              <>
+                <Link
+                  to="/profile"
+                  className="text-gray-700 hover:text-indigo-600 font-medium transition-colors"
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  disabled={logoutMutation.isPending}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {logoutMutation.isPending ? "Logging out..." : "Logout"}
+                </button>
+              </>
+            )}
+
+            {!isLoggedIn() && (
               <>
                 <Link
                   to="/login"
