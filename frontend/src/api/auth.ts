@@ -110,9 +110,16 @@ export const getProfile = async () => {
 };
 // Logout API
 export const logout = async (): Promise<void> => {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error("No access token available");
+  }
   const res = await fetch(`${environment.API_URL}/auth/logout`, {
     method: "POST",
     credentials: "include",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!res.ok) {

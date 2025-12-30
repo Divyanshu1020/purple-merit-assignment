@@ -1,10 +1,12 @@
 import { useLogout } from "@/query";
-import { getAccessToken, isAdmin, isLoggedIn } from "@/store/authStore";
+import { getAccessToken, getUserData, isAdmin, isLoggedIn } from "@/store/authStore";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const isAuthenticated = !!getAccessToken();
   const logoutMutation = useLogout();
+
+  const userData = getUserData()
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -22,6 +24,11 @@ export default function Navbar() {
             Purple Merit
           </Link>
 
+          <div className="flex flex-col text-center">
+            <p> {userData?.fullName}</p>
+            <p> {userData?.role}</p>
+          </div>
+
           {/* Navigation Links */}
           <div className="flex items-center gap-6">
             {isAuthenticated && isAdmin() && (
@@ -33,10 +40,10 @@ export default function Navbar() {
                   Profile
                 </Link>
                 <Link
-                  to="/admin"
+                  to="/users-info"
                   className="text-gray-700 hover:text-indigo-600 font-medium transition-colors"
                 >
-                  Admin
+                  Users Info
                 </Link>
                 <button
                   onClick={handleLogout}

@@ -1,4 +1,5 @@
-import { type AuthResponse, getProfile, refreshToken } from "@/api/auth";
+import { type AuthResponse, refreshToken } from "@/api/auth";
+import { getProfile } from "@/api/user";
 import { setAccessToken, setUserData } from "@/store/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -34,8 +35,8 @@ function AuthBootstrap({ children }: { children: React.ReactNode }) {
     queryFn: getProfile,
     enabled: refreshQuery.isSuccess,
     retry: false,
-    onSuccess: (data: AuthResponse) => {
-      setUserData(data.data.user);
+    onSuccess: (data) => {
+      setUserData(data.data.user as any);
     },
   });
 

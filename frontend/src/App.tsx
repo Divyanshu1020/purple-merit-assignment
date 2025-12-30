@@ -8,11 +8,12 @@ import AdminRoute from "./components/auth/AdminRoute";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 // Pages
-import AdminDashboard from "./components/page/admin/AdminDashboard";
+import AdminDashboard from "./components/page/admin/UserInfo";
 import Home from "./components/page/home/Home";
 import Login from "./components/page/login/Login";
 import UserProfile from "./components/page/profile/UserProfile";
 import Signup from "./components/page/signup/Signup";
+import UserInfo from "./components/page/admin/UserInfo";
 
 function App() {
   return (
@@ -36,10 +37,10 @@ function App() {
 
           {/* Admin Routes */}
           <Route
-            path="admin"
+            path="users-info"
             element={
               <AdminRoute>
-                <AdminDashboard />
+                <UserInfo />
               </AdminRoute>
             }
           />
