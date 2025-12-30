@@ -20,12 +20,14 @@ const profile = async (req: Request, res: Response): Promise<void> => {
         user,
       },
       status: "success",
+      version: "1.0.0",
     });
   } catch (error) {
     logger.error("Error fetching user profile", error);
     res.status(500).json({
       message: "Internal server error",
       status: "error",
+      version: "1.0.0",
     });
   }
 };

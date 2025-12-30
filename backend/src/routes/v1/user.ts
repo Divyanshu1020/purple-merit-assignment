@@ -1,12 +1,20 @@
-import profile from "@/controllers/v1/admin/profile";
+import changePassword from "@/controllers/v1/user/change-password";
+import profile from "@/controllers/v1/user/profile";
+import updateProfile from "@/controllers/v1/user/update-profile";
 import authenticateJWT from "@/middlewares/authenticateJWT";
+import checkStatus from "@/middlewares/checkStatus";
+import {
+  validateChangePassword,
+  validateUpdateProfile,
+} from "@/middlewares/zod/validation";
 import { Router } from "express";
-import requireAdmin from "@/middlewares/requireAdmin";
 
 const router = Router();
 
-router.use(authenticateJWT, requireAdmin)
+router.use(authenticateJWT, checkStatus);
 
-router.post("/profile", profile);
+router.get("/profile", profile);
+router.patch("/profile", validateUpdateProfile, updateProfile);
+router.patch("/change-password", validateChangePassword, changePassword);
 
 export default router;

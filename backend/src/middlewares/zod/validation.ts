@@ -17,6 +17,8 @@ export const passwordSchema = z
     message: "Password must contain at least one special character",
   });
 
+
+
 export const registerSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: passwordSchema,
@@ -27,11 +29,26 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: passwordSchema,
+  password: passwordSchema, // Ensure login also validates password format if desired, or just use z.string() if loose validation is preferred for login attempts
 });
 
 export const refreshTokenSchema = z.object({
   refreshToken: z.string().min(1, { message: "Refresh token is required" }),
+});
+
+export const updateProfileSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }).optional(),
+  fullName: z
+    .string()
+    .min(2, { message: "Full name must be at least 2 characters long" })
+    .optional(),
+});
+
+export const changePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .min(1, { message: "Current password is required" }),
+  newPassword: passwordSchema,
 });
 
 export const validateRegister = (
@@ -96,6 +113,56 @@ export const validateRefreshToken = (
     if (error instanceof ZodError) {
       res.status(401).json({
         message: "Unauthorized: Invalid or missing refresh token",
+        errors: error.issues.map((e) => ({
+          field: e.path[0],
+          message: e.message,
+        })),
+        status: "error",
+        version: "1.0.0",
+      });
+      return;
+    }
+    next(error);
+  }
+};
+
+export const validateUpdateProfile = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    updateProfileSchema.parse(req.body);
+    next();
+  } catch (error) {
+    if (error instanceof ZodError) {
+      res.status(400).json({
+        message: "Validation failed",
+        errors: error.issues.map((e) => ({
+          field: e.path[0],
+          message: e.message,
+        })),
+        status: "error",
+        version: "1.0.0",
+      });
+      return;
+    }
+    next(error);
+  }
+};
+
+export const validateChangePassword = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    changePasswordSchema.parse(req.body);
+    next();
+  } catch (error) {
+    if (error instanceof ZodError) {
+      res.status(400).json({
+        message: "Validation failed",
         errors: error.issues.map((e) => ({
           field: e.path[0],
           message: e.message,
