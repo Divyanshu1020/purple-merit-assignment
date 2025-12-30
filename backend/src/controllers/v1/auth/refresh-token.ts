@@ -36,6 +36,7 @@ const refreshTokenController = async (
     }
     const JWT_Payload = verifyRefreshToken(refreshToken) as {
       userId: Types.ObjectId;
+      role: string
     };
 
     // const user = await UserModel.findById(JWT_Payload.userId);
@@ -48,7 +49,7 @@ const refreshTokenController = async (
     //   return;
     // }
 
-    const accessToken = generateAccessToken(JWT_Payload.userId);
+    const accessToken = generateAccessToken(JWT_Payload.userId, JWT_Payload.role);
     // const newRefreshToken = generateRefreshToken(JWT_Payload.userId);
 
     // await TokenModel.updateOne({ refreshToken }, { refreshToken: newRefreshToken });

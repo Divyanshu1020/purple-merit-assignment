@@ -16,8 +16,8 @@ const register = async (req: Request, res: Response): Promise<void> => {
       password,
       fullName,
     });
-    const accessToken = generateAccessToken(newUser._id);
-    const refreshToken = generateRefreshToken(newUser._id);
+    const accessToken = generateAccessToken(newUser._id, newUser.role);
+    const refreshToken = generateRefreshToken(newUser._id, newUser.role);
 
     await TokenModel.create({
         refreshToken,

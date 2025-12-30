@@ -29,9 +29,11 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
     const token = authHeader.split(" ")[1] as string;
     const JWT_Payload = verifyAccessToken(token) as {
       userId: Types.ObjectId;
+      role: string
     };
 
     req.userId = JWT_Payload.userId;
+    req.role = JWT_Payload.role;
 
     return next();
   } catch (error) {
