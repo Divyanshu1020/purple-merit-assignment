@@ -9,7 +9,8 @@ import { logger } from "./lib/winston";
 
 const app = express();
 
-const coreOptions: CorsOptions = {
+const corsOptions: CorsOptions = {
+  credentials: true,
   origin(origin, callback) {
     // Allow non-browser requests (Postman, curl, server-to-server)
     if (!origin) {
@@ -34,19 +35,24 @@ const coreOptions: CorsOptions = {
   },
 };
 app.set("trust proxy", 1);
-app.use(cors(coreOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use(compression(
-  compression({
-   threshold: 1024 // Only compress responses larger than 1KB 
-  })
-));
-app.use(cookieParser());
+app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
+
 app.use(helmet());
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use(
+  compression({
+    threshold: 1024,
+  })
+);
+
 app.use(ExpressRateLimit);
+
 
 
 

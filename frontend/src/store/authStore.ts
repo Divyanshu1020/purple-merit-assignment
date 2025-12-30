@@ -12,6 +12,8 @@ export const setAccessToken = (token: string) => {
   accessToken = token;
 };
 
+export const isLoggedIn = () => !accessToken;
+
 export const getAccessToken = () => accessToken;
 
 export const clearAccessToken = () => {
@@ -26,3 +28,5 @@ export const setUserData = (user: User) => {
 export const getUserData = () => userData;
 
 export const isAdmin = () => userData?.role === "admin";
+
+export const isAuthenticated = () => !!accessToken;
