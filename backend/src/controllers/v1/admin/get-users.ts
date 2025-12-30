@@ -4,16 +4,15 @@ import { Request, Response } from "express";
 
 const getUsers = async (req: Request, res: Response): Promise<void> => {
   try {
+    // Example URL: /api/v1/admin/users?page=1&limit=10&status=active&role=admin&search=john
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
 
-    // Optional filters
     const status = req.query.status as string;
     const role = req.query.role as string;
     const search = req.query.search as string;
 
-    // Build query
     const query: any = {};
     if (status) query.status = status;
     if (role) query.role = role;

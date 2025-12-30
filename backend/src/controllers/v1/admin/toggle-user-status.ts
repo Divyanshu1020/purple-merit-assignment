@@ -15,19 +15,7 @@ const toggleUserStatus = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const user = await UserModel.findByIdAndUpdate(
-      userId,
-      [
-        {
-          $set: {
-            status: {
-              $cond: [{ $eq: ["$status", "active"] }, "inactive", "active"],
-            },
-          },
-        },
-      ],
-      { new: true }
-    );
+    const user = await UserModel.findById(userId);
 
     if (!user) {
       res.status(404).json({
@@ -37,6 +25,10 @@ const toggleUserStatus = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
+
+    // Toggle the status
+    user.status = user.status === "active" ? "inactive" : "active";
+    await user.save();
 
     res.status(200).json({
       message: `User ${
