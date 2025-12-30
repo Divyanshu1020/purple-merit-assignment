@@ -4,6 +4,8 @@ import express, { type Request, type Response } from "express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import ExpressRateLimit from "@/lib/express_rate_limit";
+import { logger } from "./lib/winston";
 
 const app = express();
 
@@ -28,6 +30,7 @@ const coreOptions: CorsOptions = {
       new Error(`CORS Error: ${origin} is not allowed by CORS`),
       false
     )
+    logger.warn(`CORS Error: ${origin} is not allowed by CORS`);
   },
 };
 app.set("trust proxy", 1);
@@ -43,6 +46,7 @@ app.use(compression(
 app.use(cookieParser());
 app.use(helmet());
 
+app.use(ExpressRateLimit);
 
 
 
