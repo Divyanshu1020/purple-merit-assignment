@@ -29,7 +29,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  password: passwordSchema, // Ensure login also validates password format if desired, or just use z.string() if loose validation is preferred for login attempts
+  password: passwordSchema, 
 });
 
 export const refreshTokenSchema = z.object({
@@ -45,9 +45,7 @@ export const updateProfileSchema = z.object({
 });
 
 export const changePasswordSchema = z.object({
-  currentPassword: z
-    .string()
-    .min(1, { message: "Current password is required" }),
+  currentPassword: passwordSchema,
   newPassword: passwordSchema,
 });
 
