@@ -24,6 +24,11 @@ const register = async (req: Request, res: Response): Promise<void> => {
         userId: newUser._id,
     })
 
+    // Remove password from response
+    const userResponse = newUser.toObject();
+    // @ts-ignore
+    delete userResponse.password;
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: config.NODE_ENV === "production",
@@ -33,7 +38,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
     res.status(201).json({
       message: "User registered successfully",
       data: {
-        user: newUser,
+        user: userResponse,
         accessToken,
       },
       status: "success",

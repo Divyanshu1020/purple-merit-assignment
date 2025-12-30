@@ -33,10 +33,11 @@ const login = async (req: Request, res: Response): Promise<void> => {
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    await TokenModel.create({
-      refreshToken,
-      userId: user._id,
-    });
+    await TokenModel.findOneAndUpdate(
+      { userId: user._id },
+      { refreshToken },
+      { upsert: true }
+    );
 
     await UserModel.updateOne(
       { _id: user._id },
