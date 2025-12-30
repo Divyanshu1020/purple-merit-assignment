@@ -1,4 +1,5 @@
 import { verifyAccessToken } from "@/lib/jwt";
+import { logger } from "@/lib/winston";
 
 import { NextFunction, Request, Response } from "express";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
@@ -34,20 +35,22 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
 
     return next();
   } catch (error) {
-    if (error instanceof JsonWebTokenError) {
-      res.status(401).json({
-        message: "Unauthorized: Invalid access token",
-        status: "error",
-        version: "1.0.0",
-      });
-      return;
-    }
     if (error instanceof TokenExpiredError) {
       res.status(401).json({
         message: "Unauthorized: Access token expired",
         status: "error",
         version: "1.0.0",
       });
+      logger.error("Unauthorized: Access token expired", error);
+      return;
+    }
+    if (error instanceof JsonWebTokenError) {
+      res.status(401).json({
+        message: "Unauthorized: Invalid access token",
+        status: "error",
+        version: "1.0.0",
+      });
+      logger.error("Unauthorized: Invalid access token", error);
       return;
     }
     res.status(500).json({

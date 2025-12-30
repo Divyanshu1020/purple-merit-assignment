@@ -7,7 +7,7 @@ import {
   validateRefreshToken,
   validateRegister,
 } from "@/middlewares/auth/validation";
-import authenticate from "@/middlewares/authenticate";
+import authenticateJWT from "@/middlewares/authenticateJWT";
 import { Router } from "express";
 
 const router = Router();
@@ -15,6 +15,6 @@ const router = Router();
 router.post("/register", validateRegister, register);
 router.post("/login", validateLogin, login);
 router.post("/refresh-token", validateRefreshToken, refreshTokenController);
-router.post("/logout", authenticate, logout);
+router.post("/logout", authenticateJWT, logout);
 
 export default router;
